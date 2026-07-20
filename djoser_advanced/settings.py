@@ -25,6 +25,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third Party Apps
+    "rest_framework",
+    "djoser",
+    
+    # Local Apps
     'accounts'
 ]
 
@@ -106,3 +112,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = "accounts.User"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
