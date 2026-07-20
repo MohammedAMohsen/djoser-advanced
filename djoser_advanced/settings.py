@@ -1,4 +1,8 @@
+from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,10 +123,26 @@ MEDIA_ROOT = BASE_DIR / "media"
 PHONENUMBER_DEFAULT_REGION = "PS" # Palestine
 PHONENUMBER_DB_FORMAT = "E164" # يجعل الأرقام تُخزن بالشكل العالمي
 
+
 DJOSER = {
+    "PASSWORD_RESET_CONFIRM_RETYPE": True,
+    "SET_PASSWORD_RETYPE": True,
     "SERIALIZERS": {
         "user_create": "accounts.serializers.CustomUserCreateSerializer",
         "user": "accounts.serializers.CustomUserSerializer",
         "current_user": "accounts.serializers.CustomUserSerializer",
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
