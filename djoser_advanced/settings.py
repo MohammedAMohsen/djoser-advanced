@@ -115,3 +115,14 @@ AUTH_USER_MODEL = "accounts.User"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+PHONENUMBER_DEFAULT_REGION = "PS" # Palestine
+PHONENUMBER_DB_FORMAT = "E164" # يجعل الأرقام تُخزن بالشكل العالمي
+
+DJOSER = {
+    "SERIALIZERS": {
+        "user_create": "accounts.serializers.CustomUserCreateSerializer",
+        "user": "accounts.serializers.CustomUserSerializer",
+        "current_user": "accounts.serializers.CustomUserSerializer",
+    }
+}
