@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     "djoser",
     
     # Local Apps
-    'accounts'
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
