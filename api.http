@@ -8,7 +8,7 @@ Content-Type: application/json
     "re_password": "StrongPassword123",
     "first_name": "hassen",
     "last_name": "Mohsen",
-    "phone_number": "********",
+    "phone_number": "0591234567",
     "birth_date": "1999-01-11"
 }
 
@@ -18,11 +18,25 @@ POST http://localhost:8000/auth/jwt/create/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "hassen@gmail.com",
+    "email": "noor@gmail.com",
     "password": "StrongPassword123"
 }
 
 ###
 
 GET http://localhost:8000/auth/users/me/ HTTP/1.1
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg0NTY5ODQxLCJpYXQiOjE3ODQ1NjYyNDEsImp0aSI6ImFlYzg0YWM3OTg3ODQ0YWU5NDJjNmNjM2FlMGM2MjQ5IiwidXNlcl9pZCI6IjQifQ.ZQLzbWIt_ylahWllqbJnlycgKw_Gp_SU-L7E5L2C5KY
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg0NjMzODg3LCJpYXQiOjE3ODQ2MzAyODcsImp0aSI6IjcyYjAxYTQzZDFkODRlOWFhZGFjYjhlZDllOWFmODc2IiwidXNlcl9pZCI6IjQifQ.48XRTOXEsD9gE0mnV14EKnkPQwf_ofGB098fUCl8OWw
+
+###
+
+PATCH http://localhost:8000/auth/users/me/ HTTP/1.1
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg0NjM1ODk1LCJpYXQiOjE3ODQ2MzIyOTUsImp0aSI6ImNiMGFjNTQ0ZjIwMTQwYTY5MGI0NmI0YmRmNzdkNGRlIiwidXNlcl9pZCI6IjIifQ.csfvLZMJ2lvMQtuJYh8wB5B7KFnMrQpsY-X6tdsl7aM
+Content-Type: application/json
+
+{
+    "username": "N@O",
+    "first_name": "Noor",
+    "last_name": "Mohsen",
+    "birth_date": "1991-12-21",
+    "email": "noor@gmail.com"
+}
