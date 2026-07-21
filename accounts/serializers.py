@@ -1,7 +1,7 @@
 from datetime import date
 from djoser.serializers import UserCreateSerializer, UserSerializer, UserCreatePasswordRetypeSerializer
 from rest_framework import serializers
-from .validators import validate_username,validate_email,validate_birth_date
+from .validators import validate_username,validate_email,validate_birth_date, validate_avatar
 from .models import User
 
 
@@ -78,3 +78,6 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
 
     def validate_birth_date(self, value):
         return validate_birth_date(value)
+    
+    def validate_avatar(self, value):
+        return validate_avatar(value)

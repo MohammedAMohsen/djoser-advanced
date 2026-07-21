@@ -18,20 +18,20 @@ POST http://localhost:8000/auth/jwt/create/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "noor@gmail.com",
-    "password": "StrongPassword123"
+    "email": "mohammed.basha.gg7845@gmail.com",
+    "password": "123"
 }
 
 ###
 
 GET http://localhost:8000/auth/users/me/ HTTP/1.1
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg0NjMzODg3LCJpYXQiOjE3ODQ2MzAyODcsImp0aSI6IjcyYjAxYTQzZDFkODRlOWFhZGFjYjhlZDllOWFmODc2IiwidXNlcl9pZCI6IjQifQ.48XRTOXEsD9gE0mnV14EKnkPQwf_ofGB098fUCl8OWw
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg0NjYxMzMzLCJpYXQiOjE3ODQ2NTc3MzQsImp0aSI6IjBlYzMwNTA1NDUwZDRlMTU5N2IxZGMzMGRmODI2NzBkIiwidXNlcl9pZCI6IjEifQ.JfY67G0UY58v27mlu-toR8zvKCQZURL1wL204BVdC8U
 
 ###
 
 PATCH http://localhost:8000/auth/users/me/ HTTP/1.1
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg0NjM1ODk1LCJpYXQiOjE3ODQ2MzIyOTUsImp0aSI6ImNiMGFjNTQ0ZjIwMTQwYTY5MGI0NmI0YmRmNzdkNGRlIiwidXNlcl9pZCI6IjIifQ.csfvLZMJ2lvMQtuJYh8wB5B7KFnMrQpsY-X6tdsl7aM
-Content-Type: application/json
+Content-Type: multipart/form-data
 
 {
     "username": "N@O",
