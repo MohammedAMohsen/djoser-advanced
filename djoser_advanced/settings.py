@@ -142,6 +142,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "common.renderers.CustomJSONRenderer",
     ],
+    "EXCEPTION_HANDLER": "common.exceptions.custom_exception_handler",
 }
 
 SIMPLE_JWT = {
