@@ -17,8 +17,8 @@ POST http://localhost:8000/auth/jwt/create/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "mohammed1.basha.gg7845@gmail.com",
-    "password": "123"
+    "email": "mohammed.1basha.gg7845@gmail.com",
+    "password": "StrongPassword123"
 }
 
 ###
@@ -38,4 +38,14 @@ Content-Type: multipart/form-data
     "last_name": "Mohsen",
     "birth_date": "1991-12-21",
     "email": "noor@gmail.com"
+}
+
+###
+
+POST http://127.0.0.1:8000/auth/users/change-email/
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg0ODI3ODY1LCJpYXQiOjE3ODQ4MjQyNjUsImp0aSI6IjU5YmNiZTRjMWU5NjQ1YjhiNjhjNGNhNzQzMjFlZGFhIiwidXNlcl9pZCI6IjIifQ.YnDHZqVlX-BSIA9uOdrkME_hR8OSenuoaG0VFtEi9WA
+Content-Type: application/json
+
+{
+    "email": "mohammed.basha.gg7845@gmail.com"
 }

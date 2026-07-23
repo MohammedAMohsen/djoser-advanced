@@ -20,6 +20,15 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173',]
+
+DOMAIN = os.getenv('FRONTEND_URL', 'localhost:5173')
+
+SITE_NAME = "Djoser SimpleApp"
+
+EMAIL_FRONTEND_PROTOCOL = "http"
+
+
 # Application definition
 
 INSTALLED_APPS = [

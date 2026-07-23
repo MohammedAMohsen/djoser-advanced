@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CustomUserSerializer, CustomUserUpdateSerializer, ChangeEmailSerializer
+from .services import build_email_change_confirmation_link
 
 
 class CustomUserViewSet(UserViewSet):
@@ -19,7 +20,10 @@ class CustomUserViewSet(UserViewSet):
         serializer.is_valid(raise_exception=True)
         request.user.pending_email = serializer.validated_data["email"]
         request.user.save(update_fields=["pending_email"])
+        confirmation_url = build_email_change_confirmation_link(request.user)
+        print(confirmation_url)
         return Response(
             {"message": ("Verification email will be sent to your new email address.")},
             status=status.HTTP_200_OK
         )
+    
