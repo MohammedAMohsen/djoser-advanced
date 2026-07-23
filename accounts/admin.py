@@ -13,6 +13,7 @@ class CustomUserAdmin(UserAdmin):
                     "phone_number",
                     "avatar",
                     "birth_date",
+                    "pending_email",
                 )
             },
         ),

@@ -10,6 +10,7 @@ class User(AbstractUser):
     phone_number      = PhoneNumberField(max_length=20, blank=True, null=True)
     avatar            = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
     birth_date        = models.DateField(blank=True, null=True)
+    pending_email     = models.EmailField(unique=True, blank=True, null=True)
     created_at        = models.DateTimeField(auto_now_add=True)
     updated_at        = models.DateTimeField(auto_now=True)
     USERNAME_FIELD    = "email"

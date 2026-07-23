@@ -64,7 +64,6 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             "username",
-            "email",
             "first_name",
             "last_name",
             "phone_number",
@@ -80,3 +79,18 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
     
     def validate_avatar(self, value):
         return validate_avatar(value)
+    
+    
+class ChangeEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+    def validate_email(self, value):
+        value = validate_email(value)
+        user = self.context["request"].user
+        if value == user.email:
+            raise serializers.ValidationError("This is already your current email.")
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("This email is already in use.")
+        if User.objects.filter(pending_email=value).exists():
+            raise serializers.ValidationError("This email is awaiting confirmation by another account.")
+        return value
