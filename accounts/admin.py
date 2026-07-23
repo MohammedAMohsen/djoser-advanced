@@ -13,7 +13,6 @@ class CustomUserAdmin(UserAdmin):
                     "phone_number",
                     "avatar",
                     "birth_date",
-                    "email_verified",
                 )
             },
         ),
@@ -24,7 +23,7 @@ class CustomUserAdmin(UserAdmin):
         "email",
         "username",
         "is_staff",
-        "email_verified",
+        "is_active",
     )
 
     search_fields = (

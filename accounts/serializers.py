@@ -50,7 +50,6 @@ class CustomUserSerializer(UserSerializer):
             "phone_number",
             "birth_date",
             "avatar",
-            "email_verified",
         )
 
     def get_full_name(self, obj):

@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ovyx)l%6_+n^jakrlzd*p^^bio0z=2#g#vilxmq7=hdhj=ou63'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     # Third Party Apps
     "rest_framework",
     "djoser",
+    'drf_spectacular',
     
     # Local Apps
     "accounts.apps.AccountsConfig",
@@ -131,7 +132,9 @@ DJOSER = {
         "user_create": "accounts.serializers.CustomUserCreateSerializer",
         "user": "accounts.serializers.CustomUserSerializer",
         "current_user": "accounts.serializers.CustomUserSerializer",
-    }
+    },
+    "SEND_ACTIVATION_EMAIL": True,
+    "ACTIVATION_URL": "activate/{uid}/{token}",
 }
 
 REST_FRAMEWORK = {
@@ -143,6 +146,15 @@ REST_FRAMEWORK = {
         "common.renderers.CustomJSONRenderer",
     ],
     "EXCEPTION_HANDLER": "common.exceptions.custom_exception_handler",
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Advanced djoser API',
+    'DESCRIPTION': 'The djoser endpoint API With DRF',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False, 
+    # OTHER SETTINGS
 }
 
 SIMPLE_JWT = {
@@ -150,3 +162,11 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+# SMTP Contfiguration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')
