@@ -3,13 +3,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from .models import User
+from .services import build_email_change_confirmation_link
 from .serializers import (
     CustomUserSerializer,
     CustomUserUpdateSerializer,
     ChangeEmailSerializer,
     ConfirmEmailChangeSerializer,
+    LogoutSerializer,
 )
-from .services import build_email_change_confirmation_link
 
 
 class CustomUserViewSet(UserViewSet):
@@ -48,9 +49,24 @@ class CustomUserViewSet(UserViewSet):
             )
         user.email = user.pending_email
         user.pending_email = None
+        
         user.save(update_fields=["email", "pending_email",])
         return Response(
             {
-                "message": "Email changed successfully."
+            "message":
+            "Email changed successfully. Please login again."
             }
+        ) # Then Frontend: delete tokens - redirect login
+    
+    @action(detail=False, methods=["post"], url_path="logout")
+    def logout(self, request):
+        serializer = LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {
+                "message":
+                "Successfully logged out."
+            },
+            status=status.HTTP_205_RESET_CONTENT
         )

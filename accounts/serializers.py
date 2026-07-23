@@ -6,6 +6,7 @@ from .models import User
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from .tokens import email_change_token_generator
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class CustomUserCreateSerializer(UserCreatePasswordRetypeSerializer):
@@ -117,3 +118,16 @@ class ConfirmEmailChangeSerializer(serializers.Serializer):
             self.fail("no_pending_email")
         attrs["user"] = user
         return attrs
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+    def validate(self, attrs):
+        self.token = attrs["refresh"]
+        return attrs
+    def save(self, **kwargs):
+        try:
+            token = RefreshToken(self.token)
+            token.blacklist()
+        except Exception:
+            raise serializers.ValidationError("Invalid token")
