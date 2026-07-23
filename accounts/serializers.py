@@ -83,8 +83,8 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
     
     def validate_avatar(self, value):
         return validate_avatar(value)
-    
-    
+
+
 class ChangeEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
     def validate_email(self, value):
