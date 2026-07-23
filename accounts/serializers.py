@@ -3,6 +3,9 @@ from djoser.serializers import UserCreateSerializer, UserSerializer, UserCreateP
 from rest_framework import serializers
 from .validators import validate_username,validate_email,validate_birth_date, validate_avatar
 from .models import User
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from .tokens import email_change_token_generator
 
 
 class CustomUserCreateSerializer(UserCreatePasswordRetypeSerializer):
@@ -83,7 +86,6 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
     
 class ChangeEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    
     def validate_email(self, value):
         value = validate_email(value)
         user = self.context["request"].user
@@ -94,3 +96,24 @@ class ChangeEmailSerializer(serializers.Serializer):
         if User.objects.filter(pending_email=value).exists():
             raise serializers.ValidationError("This email is awaiting confirmation by another account.")
         return value
+
+
+class ConfirmEmailChangeSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    default_error_messages = {
+        "invalid_link": "Invalid or expired confirmation link.",
+        "no_pending_email": "No pending email change request found.",
+    }
+    def validate(self, attrs):
+        try:
+            uid = force_str(urlsafe_base64_decode(attrs["uid"]))
+            user = User.objects.get(pk=uid)
+        except Exception:
+            self.fail("invalid_link")
+        if not email_change_token_generator.check_token(user,attrs["token"],):
+            self.fail("invalid_link")
+        if not user.pending_email:
+            self.fail("no_pending_email")
+        attrs["user"] = user
+        return attrs

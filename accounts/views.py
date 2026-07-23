@@ -2,7 +2,13 @@ from djoser.views import UserViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import CustomUserSerializer, CustomUserUpdateSerializer, ChangeEmailSerializer
+from .models import User
+from .serializers import (
+    CustomUserSerializer,
+    CustomUserUpdateSerializer,
+    ChangeEmailSerializer,
+    ConfirmEmailChangeSerializer,
+)
 from .services import build_email_change_confirmation_link
 
 
@@ -27,3 +33,24 @@ class CustomUserViewSet(UserViewSet):
             status=status.HTTP_200_OK
         )
     
+    @action(detail=False, methods=["post"], permission_classes=[], authentication_classes=[], url_path="confirm-email-change",)
+    def confirm_email_change(self, request):
+        serializer = ConfirmEmailChangeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        if User.objects.filter(email=user.pending_email).exclude(pk=user.pk).exists():
+            return Response(
+                {
+                    "detail":
+                    "Email already exists."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        user.email = user.pending_email
+        user.pending_email = None
+        user.save(update_fields=["email", "pending_email",])
+        return Response(
+            {
+                "message": "Email changed successfully."
+            }
+        )
