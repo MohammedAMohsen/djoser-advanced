@@ -8,7 +8,5 @@ def build_email_change_confirmation_link(user):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = email_change_token_generator.make_token(user)
     return (
-        f"{settings.EMAIL_FRONTEND_PROTOCOL}://{settings.DOMAIN}"
-        f"/email-change-confirm/"
-        f"?uid={uid}&token={token}"
+        f"{settings.EMAIL_FRONTEND_PROTOCOL}://{settings.DOMAIN}/activate/{uid}/{token}"
     )

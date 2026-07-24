@@ -1,12 +1,13 @@
 from datetime import date
-from djoser.serializers import UserCreateSerializer, UserSerializer, UserCreatePasswordRetypeSerializer
+from djoser.serializers import UserSerializer, UserCreatePasswordRetypeSerializer
 from rest_framework import serializers
-from .validators import validate_username,validate_email,validate_birth_date, validate_avatar
-from .models import User
 from django.utils.encoding import force_str
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.http import urlsafe_base64_decode
 from .tokens import email_change_token_generator
-from rest_framework_simplejwt.tokens import RefreshToken
+from .tasks import send_email_task
+from .models import User
+from .validators import validate_username,validate_email,validate_birth_date, validate_avatar
 
 
 class CustomUserCreateSerializer(UserCreatePasswordRetypeSerializer):
@@ -112,7 +113,7 @@ class ConfirmEmailChangeSerializer(serializers.Serializer):
             user = User.objects.get(pk=uid)
         except Exception:
             self.fail("invalid_link")
-        if not email_change_token_generator.check_token(user,attrs["token"],):
+        if not email_change_token_generator.check_token(user,attrs["token"]):
             self.fail("invalid_link")
         if not user.pending_email:
             self.fail("no_pending_email")

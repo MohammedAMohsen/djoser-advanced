@@ -29,7 +29,15 @@ class CustomUserViewSet(UserViewSet):
         request.user.pending_email = serializer.validated_data["email"]
         request.user.save(update_fields=["pending_email"])
         confirmation_url = build_email_change_confirmation_link(request.user)
-        send_email_task.delay(confirmation_url, request.user.pending_email)
+        subject = "Confirm your new email address"
+        message = (
+            f"You're receiving this email because you need to finish activation process on localhost:8000.\n\n"
+            f"Please go to the following page to activate account:\n\n"
+            f"{confirmation_url}\n\n"
+            f"Thanks for using our site!\n\n"
+            f"The localhost:8000 team\n\n"
+        )
+        send_email_task.delay(subject, message, request.user.pending_email)
         return Response(
             {"message": ("Verification email will be sent to your new email address.")},
             status=status.HTTP_200_OK
@@ -41,16 +49,9 @@ class CustomUserViewSet(UserViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         if User.objects.filter(email=user.pending_email).exclude(pk=user.pk).exists():
-            return Response(
-                {
-                    "detail":
-                    "Email already exists."
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return Response({"detail":"Email already exists."},status=status.HTTP_400_BAD_REQUEST)
         user.email = user.pending_email
         user.pending_email = None
-        
         user.save(update_fields=["email", "pending_email",])
         return Response(
             {
