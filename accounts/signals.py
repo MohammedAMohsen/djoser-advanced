@@ -1,6 +1,12 @@
-from django.db.models.signals import pre_save, post_delete
+from django.db.models.signals import pre_save, post_delete, post_save
 from django.dispatch import receiver
-from .models import User
+from .models import User, Profile
+
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
 
 
 @receiver(pre_save, sender=User)
@@ -25,6 +31,7 @@ def delete_old_avatar_on_change(sender, instance, **kwargs):
         old_avatar.delete(save=False)
 
 
+
 @receiver(post_delete, sender=User)
 def delete_avatar_on_user_delete(sender, instance, **kwargs):
     """
@@ -35,3 +42,4 @@ def delete_avatar_on_user_delete(sender, instance, **kwargs):
         and instance.avatar.storage.exists(instance.avatar.name)
     ):
         instance.avatar.delete(save=False)
+

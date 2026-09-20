@@ -8,7 +8,6 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 
 router = DefaultRouter()
-
 router.register("users", CustomUserViewSet, basename="user")
 
 urlpatterns = [

@@ -5,8 +5,7 @@ from django.utils.encoding import force_str
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.http import urlsafe_base64_decode
 from .tokens import email_change_token_generator
-from .tasks import send_email_task
-from .models import User
+from .models import User, Profile
 from .validators import validate_username,validate_email,validate_birth_date, validate_avatar
 
 
@@ -41,12 +40,21 @@ class CustomUserCreateSerializer(UserCreatePasswordRetypeSerializer):
         return validate_birth_date(value)
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('bio','age',)
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
+
+
 class CustomUserSerializer(UserSerializer):
     full_name = serializers.SerializerMethodField()
+    profile = ProfileSerializer(required=False)
     class Meta(UserSerializer.Meta):
         model = User
         fields = (
-            "id",
             "email",
             "username",
             "first_name",
@@ -55,16 +63,17 @@ class CustomUserSerializer(UserSerializer):
             "phone_number",
             "birth_date",
             "avatar",
+            'profile'
         )
 
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}".strip()
 
-
 class CustomUserUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer responsible only for updating the current user's profile.
     """
+    profile = ProfileSerializer(required=False)
     class Meta:
         model = User
         fields = (
@@ -74,6 +83,7 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
             "phone_number",
             "birth_date",
             "avatar",
+            'profile',
         )
 
     def validate_username(self, value):
@@ -84,6 +94,29 @@ class CustomUserUpdateSerializer(serializers.ModelSerializer):
     
     def validate_avatar(self, value):
         return validate_avatar(value)
+    
+    # First Method:
+    # ------------
+    # def update(self, instance, validated_data):
+    #     profile_data = validated_data.pop('profile', None)
+    #     instance = super().update(instance, validated_data)
+    #     if profile_data:
+    #         profile = instance.profile
+    #         for attr, value in profile_data.items():
+    #             setattr(profile, attr, value)
+    #         profile.save()
+    #     return instance
+    
+    # Second Method:
+    # -------------
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', None)
+        instance = super().update(instance, validated_data)
+        if profile_data:
+            profile_serializer = ProfileSerializer(instance.profile, data=profile_data, partial=True)
+            profile_serializer.is_valid()
+            profile_serializer.save()
+        return instance
 
 
 class ChangeEmailSerializer(serializers.Serializer):
